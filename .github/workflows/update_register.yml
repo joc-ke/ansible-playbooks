@@ -18,5 +18,4 @@ jobs:
         RHC_USERNAME: ${{ secrets.RHC_USERNAME }}
         RHC_PASSWORD: ${{ secrets.RHC_PASSWORD }}
       run: |
-        ansible-playbook -i inventory.ini register.yml \
-          --extra-vars "username=${RHC_USERNAME} password=${RCH_PASSWORD}"
+        ansible-playbook -i inventory.ini register.yml
