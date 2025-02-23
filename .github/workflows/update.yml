@@ -1,4 +1,4 @@
-name: Register with Red Hat
+name: Update and Reboot
 on:
   workflow_dispatch:
 jobs:
