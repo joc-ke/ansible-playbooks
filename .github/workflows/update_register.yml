@@ -2,15 +2,15 @@ name: Register with Red Hat
 on:
   workflow_dispatch:
 jobs:
-  build:
+  ansible-playbook:
     runs-on: [self-hosted, Ansible]
-      steps:
-      - uses: actions/checkout@v4
+    steps:
+    - uses: actions/checkout@v4
 
-      - name: Regsiter with Red Hat
-        env:
-          RHC_USERNAME: ${{ secrets.RHC_USERNAME }}
-          RHC_PASSWORD: ${{ secrets.RHC_PASSWORD }}
-        run: |
-          ansible-playbook -i inventory.yml register.yml \
-            --extra-vars "username=${RHC_USERNAME} password=${RCH_PASSWORD}"
+    - name: Regsiter with Red Hat
+      env:
+        RHC_USERNAME: ${{ secrets.RHC_USERNAME }}
+        RHC_PASSWORD: ${{ secrets.RHC_PASSWORD }}
+      run: |
+        ansible-playbook -i inventory.yml register.yml \
+          --extra-vars "username=${RHC_USERNAME} password=${RCH_PASSWORD}"
