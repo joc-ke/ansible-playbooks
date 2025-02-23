@@ -3,7 +3,8 @@ on:
   workflow_dispatch:
 jobs:
   ansible-playbook:
-    runs-on: [self-hosted, Ansible]
+    runs-on:
+      group: Ansible
     steps:
     - uses: actions/checkout@v4
 
