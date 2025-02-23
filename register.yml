@@ -4,8 +4,8 @@
   vars:
     rhc_auth:
       login:
-        username: "{{ lookup('env', 'RHC_USERNAME' }}"
-        password: "{{ lookup('env', 'RHC_PASSWORD' }}"
+        username: "{{ lookup('env', 'RHC_USERNAME') }}"
+        password: "{{ lookup('env', 'RHC_PASSWORD') }}"
     rhc_insights:
       state: absent
     rhc_release: "9.4"
