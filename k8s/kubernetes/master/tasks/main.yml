@@ -1,0 +1,53 @@
+---
+- name: Check if kubeadm has already run
+  stat:
+    path: "/etc/kubernetes/pki/ca.key"
+  register: kubeadm_ca
+
+- name: Init cluster if needed
+  include_tasks: init.yml
+  when: not kubeadm_ca.stat.exists
+  run_once: yes
+
+- name: Enable and check kubelet service
+  systemd:
+    name: kubelet
+    daemon_reload: yes
+    state: started
+    enabled: yes
+  register: started_kubelet
+
+- name: "Copy config file"
+  fetch:
+    src: /etc/kubernetes/admin.conf 
+    dest: "{{ lookup('env', 'HOME') }}/admin.conf"
+    flat: yes
+  run_once: yes
+  ignore_errors: yes
+
+- name: Generate join command for workers
+  command: kubeadm token create --print-join-command
+  register: join_command
+  changed_when: false
+
+- name: Get CA cert hash for joining nodes
+  command: kubeadm init phase upload-certs --upload-certs
+  register: ca_cert_output
+  changed_when: false
+
+# - name: Save the join command and CA cert hash
+#   copy:
+#     content: |
+#       {{ join_command.stdout }}
+#       {{ ca_cert_output.stdout }}
+#     dest: /tmp/k8s_join_info.txt
+#   delegate_to: localhost
+
+- name: Set facts for join command and cert hash
+  set_fact:
+    kube_join_cmd: "{{ join_command.stdout }}"
+#    kubeadm_ca_cert_hash: "{{ ca_cert_output.stdout }}"
+
+# - name: "DEBUG HOSTVARS"
+#   debug:
+#     var: "hostvars"

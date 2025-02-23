@@ -1,0 +1,27 @@
+# roles/configure_containerd/tasks/main.yml
+- name: Start and enable containerd service
+  systemd:
+    name: containerd
+    state: started
+    enabled: yes
+
+- name: Generate default containerd config
+  command: containerd config default
+  register: containerd_config
+
+- name: Save default containerd config
+  copy:
+    content: "{{ containerd_config.stdout }}"
+    dest: /etc/containerd/config.toml
+    mode: '0644'
+
+- name: Configure containerd to use SystemdCgroup
+  replace:
+    path: /etc/containerd/config.toml
+    regexp: 'SystemdCgroup = false'
+    replace: 'SystemdCgroup = true'
+
+- name: Restart containerd service
+  systemd:
+    name: containerd
+    state: restarted

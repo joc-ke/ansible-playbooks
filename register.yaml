@@ -1,0 +1,16 @@
+- name: Register systems
+  hosts: all
+  become: yes
+  vars_files:
+    - vault.yml
+  vars:
+    rhc_auth:
+      login:
+        username: "{{ username }}"
+        password: "{{ password }}"
+    rhc_insights:
+      state: absent
+    rhc_release: "9.4"
+
+  roles:
+    - linux-system-roles.rhc

@@ -1,0 +1,12 @@
+- name: Load required kernel modules
+  shell: modprobe {{ item }}
+  loop:
+    - overlay
+    - br_netfilter
+
+- name: Persist kernel modules
+  copy:
+    dest: /etc/modules-load.d/k8s.conf
+    content: |
+      overlay
+      br_netfilter

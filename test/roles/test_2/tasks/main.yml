@@ -1,0 +1,4 @@
+---
+- name: Debug
+  debug:
+    msg: "{{ hostvars['server101.joc.ke']['my_fact'] }}"

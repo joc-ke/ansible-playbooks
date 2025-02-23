@@ -1,0 +1,8 @@
+---
+- name: Set a fact
+  set_fact:
+    my_fact: "fact 1"
+
+- name: Debug
+  debug:
+    msg: "{{ my_fact }}"

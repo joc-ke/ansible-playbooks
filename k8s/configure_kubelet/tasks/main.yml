@@ -1,0 +1,5 @@
+- name: Start and enable kubelet service
+  systemd:
+    name: kubelet
+    state: started
+    enabled: yes

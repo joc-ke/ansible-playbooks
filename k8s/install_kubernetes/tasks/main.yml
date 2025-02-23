@@ -1,0 +1,25 @@
+# roles/install_kubernetes/tasks/main.yml
+- name: Add Kubernetes repository
+  yum_repository:
+    name: kubernetes
+    description: Kubernetes Repository
+    baseurl: https://pkgs.k8s.io/core:/stable:/v1.32/rpm/
+    gpgcheck: yes
+    enabled: yes
+    gpgkey:
+      - https://pkgs.k8s.io/core:/stable:/v1.32/rpm/repodata/repomd.xml.key
+    exclude:
+      - kubelet
+      - kubeadm
+      - kubectl
+      - cri-tools
+      - kubernetes-cni
+
+- name: Install Kubernetes components
+  dnf:
+    name:
+      - kubeadm
+      - kubelet
+      - kubectl
+    state: present
+    disable_excludes: kubernetes

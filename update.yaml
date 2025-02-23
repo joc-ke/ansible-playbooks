@@ -1,0 +1,13 @@
+---
+- name: Upgrade RHEL 9
+  hosts: all
+  become: yes
+  tasks:
+    - name: Upgrade all packages
+      ansible.builtin.dnf:
+        name: "*"
+        state: latest
+    - name: Reboot all systems
+      reboot:
+        reboot_timeout: 600
+        test_command: uptime
