@@ -1,8 +1,6 @@
 - name: Register systems
   hosts: all
   become: yes
-  vars_files:
-    - vault.yml
   vars:
     rhc_auth:
       login:
