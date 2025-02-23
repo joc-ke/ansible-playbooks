@@ -7,10 +7,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Create Inventory File
+      run: |
+        echo "${{ secrets.ANSIBLE_INVENTORY }}" > inventory.ini
+        chmod 600 inventory.ini  # ✅ Secure file permissions
+
     - name: Regsiter with Red Hat
       env:
         RHC_USERNAME: ${{ secrets.RHC_USERNAME }}
         RHC_PASSWORD: ${{ secrets.RHC_PASSWORD }}
       run: |
-        ansible-playbook -i inventory.yml register.yml \
+        ansible-playbook -i inventory.ini register.yml \
           --extra-vars "username=${RHC_USERNAME} password=${RCH_PASSWORD}"
