@@ -1,2 +1,16 @@
 ---
 # tasks file for roles/kubernetes/node
+- name: Generate join command on the master node
+  ansible.builtin.command: kubeadm token create --print-join-command
+  register: join_command
+  delegate_to: "{{ groups['master'][0] }}"
+  run_once: yes
+
+- name: Print join command
+  ansible.builtin.debug:
+    msg: "Join command: {{ join_command.stdout }}"
+  run_once: yes
+
+- name: Join Kubernetes node to the cluster
+  ansible.builtin.command: "{{ join_command.stdout }}"
+  when: join_command.stdout is defined

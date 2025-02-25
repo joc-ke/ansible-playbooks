@@ -1,0 +1,26 @@
+---
+- name: Check if containerd config file exists
+  stat:
+    path: "{{ containerd_config_path }}"
+  register: containerd_config_file
+
+- name: Generate default containerd config
+  command: containerd config default
+  register: containerd_config
+
+- name: Save default containerd config
+  copy:
+    content: "{{ containerd_config.stdout }}"
+    dest: "{{ containerd_config_path }}"
+    mode: '0644'
+
+- name: Configure containerd to use SystemdCgroup
+  replace:
+    path: "{{ containerd_config_path }}"
+    regexp: 'SystemdCgroup = false'
+    replace: 'SystemdCgroup = true'
+
+- name: Restart containerd
+  systemd:
+    name: containerd
+    state: restarted

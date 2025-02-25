@@ -1,0 +1,7 @@
+---
+- name: Test Pre-Install Role
+  hosts: master
+  roles:
+    - role: common
+    - role: containerd
+    - role: kubernetes/master

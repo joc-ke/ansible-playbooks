@@ -1,0 +1,39 @@
+---
+- name: Reset Kubernetes component
+  ansible.builtin.command: "kubeadm reset --force --cri-socket=/run/{{ container_runtime }}/{{ container_runtime }}.sock"
+  register: reset_cluster
+  ignore_errors: true
+  changed_when: reset_cluster.rc == 0
+
+- name: Init Kubernetes cluster
+  ansible.builtin.command: |
+    kubeadm init --service-cidr {{ service_cidr }} \
+                 --kubernetes-version {{ kube_version }} \
+                 --pod-network-cidr {{ pod_network_cidr }} \
+                 --apiserver-advertise-address {{ master_ip }} \
+                 --cri-socket=/run/{{ container_runtime }}/{{ container_runtime }}.sock \
+                 {{ kubeadm_opts }} \
+                 {{ init_opts }}
+  register: init_cluster
+  environment:
+    no_proxy: "$no_proxy,.svc,.svc.cluster.local"
+  when: reset_cluster is succeeded or reset_cluster is skipped
+  retries: 3
+  delay: 10
+  until: init_cluster.rc == 0
+  ignore_errors: true
+
+- name: Create Kubernetes config directory
+  ansible.builtin.file:
+    path: ".kube/"
+    state: directory
+
+- name: Copy admin.conf to Home directory
+  ansible.builtin.copy:
+    src: "{{ kubeadmin_config }}"
+    dest: ".kube/config"
+    owner: "{{ ansible_user | default(ansible_user_id) }}"
+    group: "{{ ansible_user | default(ansible_user_id) }}"
+    mode: 0755
+    remote_src: true
+  when: init_cluster is succeeded

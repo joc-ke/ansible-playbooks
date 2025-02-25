@@ -1,0 +1,14 @@
+---
+- name: Check if containerd service is enabled and running
+  ansible.builtin.systemd:
+    name: containerd
+    state: started
+    enabled: yes
+  register: containerd_service
+
+- name: Start and enable containerd service
+  systemd:
+    name: containerd
+    state: started
+    enabled: yes
+  when: not containerd_service.enabled

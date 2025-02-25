@@ -1,0 +1,22 @@
+---
+- name: Check if Docker repository is installed
+  stat:
+    path: /etc/yum.repos.d/docker-ce.repo
+  register: docker_repo
+
+- name: Add Docker repository
+  command: dnf config-manager --add-repo=https://download.docker.com/linux/rhel/docker-ce.repo
+  when: not docker_repo.stat.exists
+
+- name: Check if containerd.io is installed
+  ansible.builtin.package:
+    name: containerd.io
+    state: present
+  register: containerd_installed
+  check_mode: yes
+
+- name: Install containerd
+  dnf:
+    name: containerd.io
+    state: present
+  when: containerd_installed.changed

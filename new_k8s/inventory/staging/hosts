@@ -1,11 +1,12 @@
 [master]
 server101.joc.ke
 
-[node]
+[nodes]
 server102.joc.ke
 server103.joc.ke
 server104.joc.ke
+server105.joc.ke
 
 [kube_cluster:children]
 master
-node
+nodes

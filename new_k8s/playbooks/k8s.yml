@@ -1,0 +1,16 @@
+---
+- name: Install full prerequists for k8s
+  hosts: kube_cluster
+  roles:
+    - role: common
+    - role: containerd
+
+- name: Configure Kubernetes master
+  hosts: master
+  roles:
+    - role: kubernetes/master
+
+- name: Configure Kubernetes nodes
+  hosts: nodes
+  roles:
+    - role: kubernetes/node

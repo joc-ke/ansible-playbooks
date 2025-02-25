@@ -1,0 +1,17 @@
+galaxy_info:
+  author: Joc-Ke  # Ditt namn eller GitHub-handle
+  description: "Ansible-role för att konfigurera och hantera Kubernetes-kluster"  # Beskrivning av rollen
+
+  issue_tracker_url: "https://github.com/joc-ke/ansible-playbooks/issues"  # Om du använder GitHub Issues
+
+  license: MIT
+
+  min_ansible_version: 2.15
+
+  platforms:
+    - name: RedHat
+      versions:
+        - "9"
+
+  galaxy_tags:
+    - ansible
